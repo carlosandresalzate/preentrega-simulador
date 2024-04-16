@@ -5,7 +5,7 @@
  * Semana 4.
  * @version 1.0
  * @date
- * **Licencia:** GPL-3.0
+ * @license: GPL-3.0
  */
 
 /* Variables y constantes Globales */
@@ -268,8 +268,15 @@ const cartShoppingArray = [];
 
 let vectorMenuOpt = [];
 
+const menuOptions = [
+  ['Principal', ['Sobre Nosotros', 'Catálogo', 'Otros Productos']],
+  ['Sobre Nosotros', [aboutUs]],
+  ['Catalogo', ['Artistas', 'Top 10', 'Atras']],
+  ['Otros Productos', ['TocaDiscos', 'Elementos de limpieza', 'Soporte']],
+];
+
 /**
- * LIB & Funciones
+ * @namespace LIB & Funciones
  * --------------------------------------------------------------------------
  */
 // #region LIB & Funciones
@@ -277,7 +284,7 @@ let vectorMenuOpt = [];
 /**
  * @brief Combina multiples arrays, elimina duplicados y ordena los elementos
  * alfabeticamente.
- * @function
+ * @function mergeAndSortArray
  * @param  {...Array} arrays - Arrays a combinar y procesar.
  * @returns {void}
  */
@@ -323,69 +330,62 @@ mergeAndSortArray(
   classicalMusic
 );
 
+/**
+ * @brief agrego dos elementos en el array cartShoppingArray
+ * @var {Array} cartShoppingArray - Carrito de compras;
+ */
 cartShoppingArray.push('Pink Floyd');
 cartShoppingArray.push('AC/DC');
 
-// function showMenu(opt, menuTitle) {
-//   let showCartShopping =
-//     cartShoppingArray.length >= 1 ? `🛒 (${cartShoppingArray.length})` : '';
-
-//   let menu = `${greeting} 🎶        ${showCartShopping}\n `;
-//   menu += '--------------------------\n';
-//   menu += `MENU ${menuTitle} ↴\n`;
-//   menu += 'Z: Para volver al menu principal\n';
-//   if (menuTitle === 'Artistas' || menuTitle === 'Top 10 🏆') {
-//     menu += 'Ingrese el codigo del artista \n';
-//   }
-
-//   for (let i = 0; i < opt.length; i++) {
-//     menu += `
-//         ${i + 1}. ${opt[i]}
-//       `;
-//   }
-
-//   menu += `
-//   Ingrese el numero de la opcion que desea ver. ↴
-//   `;
-
-//   return menu;
-// }
-
-const menuOptions = [
-  ['Principal', ['Sobre Nosotros', 'Catálogo', 'Otros Productos']],
-  ['Sobre Nosotros', [aboutUs]], // Agrega las opciones correspondientes a Sobre Nosotros
-  ['Catalogo', ['Artistas', 'Top 10', 'Atras']], // Agrega las opciones correspondientes a Catálogo
-  ['Otros Productos', ['TocaDiscos', 'Elementos de limpieza', 'Soporte']], // Agrega las opciones correspondientes a Otros Productos
-];
-
-function getRandomItemsFromArray(array, count) {
-  const shuffled = array.sort(() => 0.5 - Math.random());
-  return shuffled.slice(0, count);
+/**
+ * @brief Genera una lista de artistas random (Top 10)
+ * @function random
+ * @returns {Array}
+ */
+function random() {
+  for (let i = 0; i < 10; i++) {
+    let random = Math.floor(Math.random() * artists.length);
+    topTenArray.push(artists[random]);
+  }
+  return topTenArray;
 }
 
-topTenArray = getRandomItemsFromArray(artists, 10);
-console.log(topTenArray);
+random();
 
+/**
+ * @brief Muestra una menu con opciones
+ * @function showMenu
+ * @param {string} title - Titulo del menu
+ * @param {Array} array - Array con las optiones para el menu
+ * @returns {string} - el menu returna como un string.
+ */
 function showMenu(title, array) {
-  console.log('Title: ', title);
-  console.log('Array: ', array);
-
-  let menu = `Menu ${title}             🛒\n`;
+  console.log('Funcion showMenu()');
+  let menu = `Menu ${title}🎶             🛒(${
+    cartShoppingArray.length > 0
+      ? cartShoppingArray.length
+      : cartShoppingArray.length
+  })\n`;
   menu += '--------------------------\n';
-  for (let i = 0; i < array.length; i++) {
-    menu += `${i + 1}. ${array[i]}\n`;
-  }
+  array.forEach((array, i) => {
+    menu += `${i + 1}. ${array}\n`;
+  });
   menu += `
+    Para ver el carrito ingrese: 0
     Ingrese el numero de la opcion que desea ver. ↴
     `;
 
   return menu;
 }
 
+/**
+ * @brief muestra la seccion "Sobre Nosotros"
+ * @function setAboutUs
+ * @param {string} title - Titulo para la seccion "Sobre Nosotros"
+ */
 function setAboutUs(title) {
   console.log('SetAboutUs');
   const aboutUsData = menuOptions.find((opt) => opt[0] === 'Sobre Nosotros')[1];
-  // console.log(aboutUsData);
   const confirmMessage = aboutUsData.join('\n');
   const showAboutUs = `${title} 📝 \n
   ${confirmMessage}\n
@@ -401,6 +401,11 @@ function setAboutUs(title) {
   }
 }
 
+/**
+ * @brief Muestra el menu del catalogo con los manejos de interaccion
+ * @function setCatalog
+ * @returns
+ */
 function setCatalog() {
   console.log('Funcion SetCatalog()');
   let getUserOption;
@@ -431,6 +436,8 @@ function setCatalog() {
     } else if (submenuTitle === 'Atras') {
       main();
     }
+  } else if (selectedOption === 0) {
+    showCart();
   } else {
     alert('Opción inválida. Por favor, ingrese un número válido.');
     setCatalog();
@@ -439,19 +446,24 @@ function setCatalog() {
 
 function setArtist() {
   console.log('Funcion setArtists()');
-  console.log('Cart: ', cartShoppingArray);
+
   let getUserOption;
   do {
     getUserOption = prompt(showMenu(menuOptions[2][1][0], artists));
     if (getUserOption === null) {
       console.log('El usuario cancela la seleccion de artistas');
-      alert('Seleccion de artista cancelada');
+      let goToCatalog = confirm(
+        'Seleccion de artista cancelada, se regresa a Catalogo'
+      );
+      if (goToCatalog) {
+        setCatalog();
+      }
+
       return;
     }
   } while (getUserOption.trim() === '');
 
   let selectedOption = parseInt(getUserOption);
-  // console.log(selectedOption);
 
   if (
     !isNaN(selectedOption) &&
@@ -482,11 +494,11 @@ function setArtist() {
       }
     }
   } else if (selectedOption === 0) {
-    console.log('Regresando al menú principal');
-    main();
+    console.log('Regresando al menú Catalogo');
+    showCart();
   } else {
     alert('Opción inválida. Por favor, ingrese un número válido.');
-    setArtist(); // Volver a mostrar el menú de artistas si la opción es inválida
+    setArtist();
   }
 }
 
@@ -496,6 +508,16 @@ function setTopTen() {
   let getUserOption;
   do {
     getUserOption = prompt(showMenu(menuOptions[2][1][1], topTenArray));
+    if (getUserOption === null) {
+      console.log('Usuario Cancelo la seleccion de Top 10');
+      let goToCatalog = confirm(
+        'Seleccion de Top 10 cancelada, se regresa a Catalogo'
+      );
+      if (goToCatalog) {
+        setCatalog();
+      }
+      return;
+    }
   } while (getUserOption.trim() === '');
 
   let selectedOption = parseInt(getUserOption);
@@ -508,7 +530,7 @@ function setTopTen() {
     console.log(selectedItem);
     if (
       cartShoppingArray.length > 0 &&
-      cartShoppingArray.includes(selectedItem)
+      !cartShoppingArray.includes(selectedItem)
     ) {
       cartShoppingArray.push(selectedItem);
       alert(`!${selectedItem} agregado al carrito`);
@@ -520,29 +542,76 @@ function setTopTen() {
       } else {
         setCatalog();
       }
-    } else if (selectedItem === 0) {
-      console.log('Regresando al menu principal');
-      main();
     } else {
-      alert('Opcion invalida. Por Favor, ingrese un numero valido.');
+      alert(
+        `!${selectedItem} ya esta en el carrito! por favor, seleccione otro elemento.`
+      );
       setTopTen();
     }
+  } else if (selectedOption === 0) {
+    console.log('Regresando al menu principal');
+    main();
+  } else {
+    alert('Opcion invalida. Por Favor, ingrese un numero valido');
+    setTopTen();
   }
+}
+
+function setOtherProducts() {
+  console.log('Funcion setOtherProducts()');
+  let getUserOption;
+  do {
+    getUserOption = prompt(showMenu(menuOptions[3][0], menuOptions[3][1]));
+  } while (getUserOption === '');
 }
 
 function showCart() {
   console.log('Funcion showCart()');
-  for (let item of cartShoppingArray) {
-    console.log(item);
+  let getUserOption;
+  do {
+    getUserOption = prompt(showMenu('Carrito de Compra', cartShoppingArray));
+    if (getUserOption === null) {
+      console.log('El Usuario cancela el carrito');
+      alert('Regresa al menu principal');
+      main();
+      return;
+    }
+  } while (getUserOption.trim === '');
+
+  let selectedOption = parseInt(getUserOption);
+
+  if (
+    !isNaN(selectedOption) &&
+    selectedOption >= 1 &&
+    selectedOption <= cartShoppingArray.length
+  ) {
+    let selectedArtist = cartShoppingArray[selectedOption - 1];
+    if (cartShoppingArray.includes(selectedArtist)) {
+      let removeItem = cartShoppingArray.indexOf(selectedArtist);
+      if (removeItem !== -1) {
+        cartShoppingArray.splice(removeItem, 1);
+        let goToCart = confirm(
+          'Elimino el producto del carrito, desea ir al carrito? Si no, se le dirigira a Catalogo'
+        );
+        if (goToCart) {
+          showCart();
+        } else {
+          setCatalog();
+        }
+      }
+    }
+  } else if (selectedOption === 0) {
+    console.log('Regresando al menu principal');
+    main();
+  } else {
+    alert('Opcion invalida. Por Favor, ingrese un numero valido');
+    showCart();
   }
-  let setItems = `Elementos en el Carrito:\n${cartShoppingArray.join('\n')}`;
-  alert(setItems);
   main();
 }
 
 function main() {
   console.log('Funcion Main()');
-  console.log('Option de usuario desde menu principal');
 
   let getUserOption;
 
@@ -550,7 +619,6 @@ function main() {
     getUserOption = prompt(showMenu(menuOptions[0][0], menuOptions[0][1]));
     if (getUserOption === null) {
       console.log('Usuario cancelo la Aplicacion');
-      // console.log(getUserOption);
       alert('La Aplicacion ha sido cancelada en: Main()');
       return;
     }
@@ -568,9 +636,13 @@ function main() {
       setAboutUs(submenuTitle);
     } else if (submenuTitle === 'Catalogo') {
       setCatalog();
+    } else if (submenuTitle === 'Otros Productos') {
+      setOtherProducts();
     } else {
       alert(`Mostrar información para ${submenuTitle}`);
     }
+  } else if (selectedOption === 0) {
+    showCart();
   } else {
     alert('Opción inválida. Por favor, ingrese un número válido.');
     main();
