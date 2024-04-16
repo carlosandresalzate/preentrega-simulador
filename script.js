@@ -610,6 +610,7 @@ function showCart() {
   main();
 }
 
+// #region Funcion Main
 function main() {
   console.log('Funcion Main()');
 
