@@ -273,14 +273,6 @@ menuOptions.push(['Sobre Nosotros', [aboutUs]]);
 menuOptions.push(['Catalogo', catalog]);
 menuOptions.push(['Otros Productos', otherProducts]);
 
-console.log(menuOptions);
-// const menuOptions = [
-//   ['Principal', ['Sobre Nosotros', 'Catálogo', 'Otros Productos']],
-//   ['Sobre Nosotros', [aboutUs]],
-//   ['Catalogo', ['Artistas', 'Top 10', 'Atras']],
-//   ['Otros Productos', ['TocaDiscos', 'Elementos de limpieza', 'Soporte']],
-// ];
-
 /**
  * @namespace LIB & Funciones
  * --------------------------------------------------------------------------
@@ -662,9 +654,9 @@ function main() {
       return;
     }
   } while (getUserOption.trim() === '');
-  
+
   let selectedOption = parseInt(getUserOption);
-  
+
   if (
     !isNaN(selectedOption) &&
     selectedOption >= 1 &&
