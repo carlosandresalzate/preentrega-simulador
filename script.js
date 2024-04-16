@@ -349,6 +349,19 @@ function random() {
 }
 
 random();
+/**
+ * @brief Funcion para manejar la logica de repetiencion con do-wile.
+ * @param {Function} func - La funcion que se ejecutara en cada iteracion del ciclo
+ * @return {void}
+ */
+function repeatDoWhile(func) {
+  let repeat = true;
+  do {
+    func();
+    let userInput = promp('¿Desea Continuar? (s/n)');
+    repeat = userInput.toLowerCase() === 's';
+  } while (repeat);
+}
 
 /**
  * @brief Muestra una menu con opciones
@@ -414,38 +427,38 @@ function setCatalog() {
   console.log('Funcion SetCatalog()');
   let getUserOption;
 
-  do {
-    getUserOption = prompt(showMenu(menuOptions[2][0], menuOptions[2][1]));
-    // console.log(getUserOption);
+  repeatDoWhile(() => {
+    let getUserOption = prompt(showMenu(menuOptions[2][0], menuOptions[2][1]));
     if (getUserOption === null) {
-      // console.log('Usuario cancelo la Aplicacion en el menú de Catálogo');
-      alert('La Aplicacion ha sido cancelada en el menú de Catálogo');
+      let goToMain = confirm('La Aplicacion ha sido cancelada en el menú de Catálogo, aceptar para ir a Menu Principal, cancelar para salir');
+      if(goToMain) {
+        main();
+      }
       return;
     }
-  } while (getUserOption.trim() === '');
 
-  let selectedOption = parseInt(getUserOption);
+    let selectedOption = parseInt(getUserOption);
 
-  if (
-    !isNaN(selectedOption) &&
-    selectedOption >= 1 &&
-    selectedOption <= menuOptions[2][1].length
-  ) {
-    let submenuTitle = menuOptions[2][1][selectedOption - 1];
-    // console.log('submenuTitle ',submenuTitle)
-    if (submenuTitle === 'Artistas') {
-      setArtist();
-    } else if (submenuTitle === 'Top 10') {
-      setTopTen();
-    } else if (submenuTitle === 'Atras') {
-      main();
+    if (
+      !isNaN(selectedOption) &&
+      selectedOption >= 1 &&
+      selectedOption <= menuOptions[2][1].length
+    ) {
+      let submenuTitle = menuOptions[2][1][selectedOption - 1];
+      if (submenuTitle === 'Artistas') {
+        setArtist();
+      } else if (submenuTitle === 'Top 10') {
+        setTopTen();
+      } else if (submenuTitle === 'Atras') {
+        main();
+      }
+    } else if (selectedOption === 0) {
+      showCart();
+    } else {
+      alert('Opcion Invalida. Por favor, ingrese un numero valido');
+      setCatalog();
     }
-  } else if (selectedOption === 0) {
-    showCart();
-  } else {
-    alert('Opción inválida. Por favor, ingrese un número válido.');
-    setCatalog();
-  }
+  });
 }
 
 /**
@@ -455,10 +468,8 @@ function setCatalog() {
  */
 function setArtist() {
   console.log('Funcion setArtists()');
-
-  let getUserOption;
-  do {
-    getUserOption = prompt(showMenu(menuOptions[2][1][0], artists));
+  repeatDoWhile(() => {
+    let getUserOption = prompt(showMenu(menuOptions[2][1][0], artists));
     if (getUserOption === null) {
       console.log('El usuario cancela la seleccion de artistas');
       let goToCatalog = confirm(
@@ -470,45 +481,45 @@ function setArtist() {
 
       return;
     }
-  } while (getUserOption.trim() === '');
 
-  let selectedOption = parseInt(getUserOption);
+    let selectedOption = parseInt(getUserOption);
 
-  if (
-    !isNaN(selectedOption) &&
-    selectedOption >= 1 &&
-    selectedOption <= artists.length
-  ) {
-    let selectedArtist = artists[selectedOption - 1];
     if (
-      cartShoppingArray.length > 0 &&
-      cartShoppingArray.includes(selectedArtist)
+      !isNaN(selectedOption) &&
+      selectedOption >= 1 &&
+      selectedOption <= artists.length
     ) {
-      alert(
-        `¡${selectedArtist} ya está en el carrito! Por favor, seleccione otro artista.`
-      );
-      setArtist();
-    } else {
-      cartShoppingArray.push(selectedArtist);
-      alert(`¡${selectedArtist} agregado al carrito!`);
-
-      let goToCart = confirm(
-        'Desea ir al Carrito? Si no, se le redirigira al menu de Catalogo'
-      );
-      if (goToCart) {
-        showCart();
+      let selectedArtist = artists[selectedOption - 1];
+      if (
+        cartShoppingArray.length > 0 &&
+        cartShoppingArray.includes(selectedArtist)
+      ) {
+        alert(
+          `¡${selectedArtist} ya está en el carrito! Por favor, seleccione otro artista.`
+        );
+        setArtist();
       } else {
-        setCatalog();
-        return;
+        cartShoppingArray.push(selectedArtist);
+        alert(`¡${selectedArtist} agregado al carrito!`);
+
+        let goToCart = confirm(
+          'Desea ir al Carrito? Si no, se le redirigira al menu de Catalogo'
+        );
+        if (goToCart) {
+          showCart();
+        } else {
+          setCatalog();
+          return;
+        }
       }
+    } else if (selectedOption === 0) {
+      console.log('Regresando al menú Catalogo');
+      showCart();
+    } else {
+      alert('Opción inválida. Por favor, ingrese un número válido.');
+      setArtist();
     }
-  } else if (selectedOption === 0) {
-    console.log('Regresando al menú Catalogo');
-    showCart();
-  } else {
-    alert('Opción inválida. Por favor, ingrese un número válido.');
-    setArtist();
-  }
+  });
 }
 
 /**
@@ -519,9 +530,8 @@ function setArtist() {
 function setTopTen() {
   console.log('Funcion setTopTen()');
 
-  let getUserOption;
-  do {
-    getUserOption = prompt(showMenu(menuOptions[2][1][1], topTenArray));
+  repeatDoWhile(() => {
+    let getUserOption = prompt(showMenu(menuOptions[2][1][1], topTenArray));
     if (getUserOption === null) {
       console.log('Usuario Cancelo la seleccion de Top 10');
       let goToCatalog = confirm(
@@ -532,43 +542,43 @@ function setTopTen() {
       }
       return;
     }
-  } while (getUserOption.trim() === '');
 
-  let selectedOption = parseInt(getUserOption);
-  if (
-    !isNaN(selectedOption) &&
-    selectedOption >= 1 &&
-    selectedOption <= topTenArray.length
-  ) {
-    let selectedItem = topTenArray[selectedOption - 1];
-    console.log(selectedItem);
+    let selectedOption = parseInt(getUserOption);
     if (
-      cartShoppingArray.length > 0 &&
-      !cartShoppingArray.includes(selectedItem)
+      !isNaN(selectedOption) &&
+      selectedOption >= 1 &&
+      selectedOption <= topTenArray.length
     ) {
-      cartShoppingArray.push(selectedItem);
-      alert(`!${selectedItem} agregado al carrito`);
-      let goToCart = confirm(
-        '¿Desea ir al Carrito? Si no, se le redirigira al menu de Catalogo'
-      );
-      if (goToCart) {
-        showCart();
+      let selectedItem = topTenArray[selectedOption - 1];
+      console.log(selectedItem);
+      if (
+        cartShoppingArray.length > 0 &&
+        !cartShoppingArray.includes(selectedItem)
+      ) {
+        cartShoppingArray.push(selectedItem);
+        alert(`!${selectedItem} agregado al carrito`);
+        let goToCart = confirm(
+          '¿Desea ir al Carrito? Si no, se le redirigira al menu de Catalogo'
+        );
+        if (goToCart) {
+          showCart();
+        } else {
+          setCatalog();
+        }
       } else {
-        setCatalog();
+        alert(
+          `!${selectedItem} ya esta en el carrito! por favor, seleccione otro elemento.`
+        );
+        setTopTen();
       }
+    } else if (selectedOption === 0) {
+      console.log('Regresando al menu principal');
+      main();
     } else {
-      alert(
-        `!${selectedItem} ya esta en el carrito! por favor, seleccione otro elemento.`
-      );
+      alert('Opcion invalida. Por Favor, ingrese un numero valido');
       setTopTen();
     }
-  } else if (selectedOption === 0) {
-    console.log('Regresando al menu principal');
-    main();
-  } else {
-    alert('Opcion invalida. Por Favor, ingrese un numero valido');
-    setTopTen();
-  }
+  });
 }
 
 /**
@@ -578,12 +588,74 @@ function setTopTen() {
  */
 function setOtherProducts() {
   console.log('Funcion setOtherProducts()');
-  let getUserOption;
-  do {
-    getUserOption = prompt(showMenu(menuOptions[3][0], menuOptions[3][1]));
-  } while (getUserOption === '');
+  repeatDoWhile(() => {
+    let getUserOption = prompt(showMenu(menuOptions[3][0], menuOptions[3][1]));
+    if (getUserOption === null) {
+      let goToMain = confirm(
+        'Aceptar para volver al Menu Principal, Cancelar para cerrar'
+      );
+      if (goToMain) {
+        main();
+      }
+      return;
+    }
+
+    let selectedOption = parseInt(getUserOption);
+
+    if (
+      !isNaN(selectedOption) &&
+      selectedOption >= 1 &&
+      selectedOption <= menuOptions[3][1].length
+    ) {
+      let submenuTitle = menuOptions[3][1][selectedOption - 1];
+      if (submenuTitle === 'TocaDiscos') {
+        setPhonoGraph();
+      } else if (submenuTitle === 'Elementos de limpieza') {
+        setCleaningElements();
+      } else if (submenuTitle === 'Soporte') {
+        setSupport();
+      } else if (cartShoppingArray.length > 0 && selectedOption === 0) {
+        showCart();
+      } else {
+        alert('Opcion Invalida. Por favor, ingrese un numero valido');
+        setOtherProducts();
+      }
+    }
+  });
 }
 
+function setPhonoGraph() {
+  console.log('Funcion setPhonoGraph()');
+  let goToPhonoGraph = confirm(
+    'Pagina en construccion.\nAl aceptar volvera a el Menu Otros Productos'
+  );
+  if (goToPhonoGraph) {
+    setOtherProducts();
+  }
+  return;
+}
+
+function setCleaningElements() {
+  console.log('Funcion setCleaningElements()');
+  let goToPhonoGraph = confirm(
+    'Pagina en construccion.\nAl aceptar volvera a el Menu Otros Productos'
+  );
+  if (goToPhonoGraph) {
+    setOtherProducts();
+  }
+  return;
+}
+
+function setSupport() {
+  console.log('Funcion setSupport()');
+  let goToPhonoGraph = confirm(
+    'Pagina en construccion.\nAl aceptar volvera a el Menu Otros Productos'
+  );
+  if (goToPhonoGraph) {
+    setOtherProducts();
+  }
+  return;
+}
 /**
  * @brief Muestra el carrito de Compra y maneja la interaccion del usuario.
  * @function showCart
@@ -591,47 +663,49 @@ function setOtherProducts() {
  */
 function showCart() {
   console.log('Funcion showCart()');
-  let getUserOption;
-  do {
-    getUserOption = prompt(showMenu('Carrito de Compra', cartShoppingArray));
+  repeatDoWhile(() => {
+    let getUserOption = prompt(
+      showMenu('Carrito de Compra', cartShoppingArray)
+    );
     if (getUserOption === null) {
       console.log('El Usuario cancela el carrito');
       alert('Regresa al menu principal');
       main();
       return;
     }
-  } while (getUserOption.trim === '');
 
-  let selectedOption = parseInt(getUserOption);
+    let selectedOption = parseInt(getUserOption);
 
-  if (
-    !isNaN(selectedOption) &&
-    selectedOption >= 1 &&
-    selectedOption <= cartShoppingArray.length
-  ) {
-    let selectedArtist = cartShoppingArray[selectedOption - 1];
-    if (cartShoppingArray.includes(selectedArtist)) {
-      let removeItem = cartShoppingArray.indexOf(selectedArtist);
-      if (removeItem !== -1) {
-        cartShoppingArray.splice(removeItem, 1);
-        let goToCart = confirm(
-          'Elimino el producto del carrito, desea ir al carrito? Si no, se le dirigira a Catalogo'
-        );
-        if (goToCart) {
-          showCart();
-        } else {
-          setCatalog();
+    if (
+      !isNaN(selectedOption) &&
+      selectedOption >= 1 &&
+      selectedOption <= cartShoppingArray.length
+    ) {
+      let selectedArtist = cartShoppingArray[selectedOption - 1];
+      if (cartShoppingArray.includes(selectedArtist)) {
+        let removeItem = cartShoppingArray.indexOf(selectedArtist);
+        if (removeItem !== -1) {
+          cartShoppingArray.splice(removeItem, 1);
+          let goToCart = confirm(
+            'Elimino el producto del carrito, desea ir al carrito? Si no, se le dirigira a Catalogo'
+          );
+          if (goToCart) {
+            showCart();
+          } else {
+            setCatalog();
+          }
         }
       }
+    } else if (selectedOption === 0) {
+      console.log('Regresando al menu principal');
+      main();
+      return;
+    } else {
+      alert('Opcion invalida. Por Favor, ingrese un numero valido');
+      showCart();
     }
-  } else if (selectedOption === 0) {
-    console.log('Regresando al menu principal');
-    main();
-    return;
-  } else {
-    alert('Opcion invalida. Por Favor, ingrese un numero valido');
-    showCart();
-  }
+  });
+
   main();
 }
 
@@ -644,39 +718,36 @@ function showCart() {
 function main() {
   console.log('Funcion Main()');
 
-  let getUserOption;
-
-  do {
-    getUserOption = prompt(showMenu(menuOptions[0][0], menuOptions[0][1]));
+  repeatDoWhile(() => {
+    let getUserOption = prompt(showMenu(menuOptions[0][0], menuOptions[0][1]));
     if (getUserOption === null) {
       console.log('Usuario cancelo la Aplicacion');
       alert('La Aplicacion ha sido cancelada en: Main()');
       return;
     }
-  } while (getUserOption.trim() === '');
+    let selectedOption = parseInt(getUserOption);
 
-  let selectedOption = parseInt(getUserOption);
-
-  if (
-    !isNaN(selectedOption) &&
-    selectedOption >= 1 &&
-    selectedOption <= menuOptions[0][1].length
-  ) {
-    let submenuTitle = menuOptions[selectedOption][0];
-    if (submenuTitle === 'Sobre Nosotros') {
-      setAboutUs(submenuTitle);
-    } else if (submenuTitle === 'Catalogo') {
-      setCatalog();
-    } else if (submenuTitle === 'Otros Productos') {
-      setOtherProducts();
+    if (
+      !isNaN(selectedOption) &&
+      selectedOption >= 1 &&
+      selectedOption <= menuOptions[0][1].length
+    ) {
+      let submenuTitle = menuOptions[selectedOption][0];
+      if (submenuTitle === 'Sobre Nosotros') {
+        setAboutUs(submenuTitle);
+      } else if (submenuTitle === 'Catalogo') {
+        setCatalog();
+      } else if (submenuTitle === 'Otros Productos') {
+        setOtherProducts();
+      } else {
+        alert(`Mostrar información para ${submenuTitle}`);
+      }
+    } else if (selectedOption === 0) {
+      showCart();
     } else {
-      alert(`Mostrar información para ${submenuTitle}`);
+      alert('Opción inválida. Por favor, ingrese un número válido.');
+      main();
     }
-  } else if (selectedOption === 0) {
-    showCart();
-  } else {
-    alert('Opción inválida. Por favor, ingrese un número válido.');
-    main();
-  }
+  });
 }
 main();
