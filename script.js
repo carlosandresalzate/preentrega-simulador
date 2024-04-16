@@ -266,14 +266,20 @@ let topTenArray = [];
  */
 const cartShoppingArray = [];
 
-let vectorMenuOpt = [];
+const menuOptions = [];
 
-const menuOptions = [
-  ['Principal', ['Sobre Nosotros', 'Catálogo', 'Otros Productos']],
-  ['Sobre Nosotros', [aboutUs]],
-  ['Catalogo', ['Artistas', 'Top 10', 'Atras']],
-  ['Otros Productos', ['TocaDiscos', 'Elementos de limpieza', 'Soporte']],
-];
+menuOptions.push(['principal', startMenu]);
+menuOptions.push(['Sobre Nosotros', [aboutUs]]);
+menuOptions.push(['Catalogo', catalog]);
+menuOptions.push(['Otros Productos', otherProducts]);
+
+console.log(menuOptions);
+// const menuOptions = [
+//   ['Principal', ['Sobre Nosotros', 'Catálogo', 'Otros Productos']],
+//   ['Sobre Nosotros', [aboutUs]],
+//   ['Catalogo', ['Artistas', 'Top 10', 'Atras']],
+//   ['Otros Productos', ['TocaDiscos', 'Elementos de limpieza', 'Soporte']],
+// ];
 
 /**
  * @namespace LIB & Funciones
@@ -338,9 +344,9 @@ cartShoppingArray.push('Pink Floyd');
 cartShoppingArray.push('AC/DC');
 
 /**
- * @brief Genera una lista de artistas random (Top 10)
+ * @brief Genera una lista aleatoria de artistas (Top 10)
  * @function random
- * @returns {Array}
+ * @returns {Array} - La lista generada del Top 10 de artistas
  */
 function random() {
   for (let i = 0; i < 10; i++) {
@@ -357,11 +363,13 @@ random();
  * @function showMenu
  * @param {string} title - Titulo del menu
  * @param {Array} array - Array con las optiones para el menu
- * @returns {string} - el menu returna como un string.
+ * @returns {string} - el menu retorna como un string.
  */
 function showMenu(title, array) {
   console.log('Funcion showMenu()');
-  let menu = `Menu ${title}🎶             🛒(${
+  let menu = `
+  ${greeting}\n
+  Menu ${title}🎶             🛒(${
     cartShoppingArray.length > 0
       ? cartShoppingArray.length
       : cartShoppingArray.length
@@ -371,7 +379,11 @@ function showMenu(title, array) {
     menu += `${i + 1}. ${array}\n`;
   });
   menu += `
-    Para ver el carrito ingrese: 0
+    ${
+      cartShoppingArray.length <= 0 || title === 'Carrito de Compra'
+        ? ''
+        : 'Para ver el carrito ingrese: 0'
+    }\n  
     Ingrese el numero de la opcion que desea ver. ↴
     `;
 
@@ -402,9 +414,9 @@ function setAboutUs(title) {
 }
 
 /**
- * @brief Muestra el menu del catalogo con los manejos de interaccion
+ * @brief Muestra el menu del catalogo y maneja la interaccion del usuario
  * @function setCatalog
- * @returns
+ * @returns {void}
  */
 function setCatalog() {
   console.log('Funcion SetCatalog()');
@@ -444,6 +456,11 @@ function setCatalog() {
   }
 }
 
+/**
+ * @brief Muestra el menu de artistas y maneja la interaccion del usuario.
+ * @function setArtist
+ * @returns {void}
+ */
 function setArtist() {
   console.log('Funcion setArtists()');
 
@@ -502,6 +519,11 @@ function setArtist() {
   }
 }
 
+/**
+ * @brief Muestra el menu Top 10 y maneja la interaccion del usuario
+ * @function setTopTen
+ * @returns {void}
+ */
 function setTopTen() {
   console.log('Funcion setTopTen()');
 
@@ -557,6 +579,11 @@ function setTopTen() {
   }
 }
 
+/**
+ * @brief Muestra el menu Otros Productos y maneja la interaccion con el usuario
+ * @function setOtherProducts
+ * @returns {void}
+ */
 function setOtherProducts() {
   console.log('Funcion setOtherProducts()');
   let getUserOption;
@@ -565,6 +592,11 @@ function setOtherProducts() {
   } while (getUserOption === '');
 }
 
+/**
+ * @brief Muestra el carrito de Compra y maneja la interaccion del usuario.
+ * @function showCart
+ * @returns {void}
+ */
 function showCart() {
   console.log('Funcion showCart()');
   let getUserOption;
@@ -603,6 +635,7 @@ function showCart() {
   } else if (selectedOption === 0) {
     console.log('Regresando al menu principal');
     main();
+    return;
   } else {
     alert('Opcion invalida. Por Favor, ingrese un numero valido');
     showCart();
@@ -611,6 +644,11 @@ function showCart() {
 }
 
 // #region Funcion Main
+/**
+ * @brief Punto de entrada principal de la aplicacion
+ * @function main
+ * @returns {void}
+ */
 function main() {
   console.log('Funcion Main()');
 
@@ -624,9 +662,9 @@ function main() {
       return;
     }
   } while (getUserOption.trim() === '');
-
+  
   let selectedOption = parseInt(getUserOption);
-
+  
   if (
     !isNaN(selectedOption) &&
     selectedOption >= 1 &&
