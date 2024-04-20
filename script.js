@@ -377,7 +377,7 @@ function showMenu(title, array) {
   Menu ${title}🎶             🛒(${
     cartShoppingArray.length > 0
       ? cartShoppingArray.length
-      : cartShoppingArray.length
+      : 'vacio'
   })\n`;
   menu += '--------------------------\n';
   array.forEach((array, i) => {
@@ -402,7 +402,7 @@ function showMenu(title, array) {
  */
 function setAboutUs(title) {
   console.log('SetAboutUs');
-  const aboutUsData = menuOptions.find((opt) => opt[0] === 'Sobre Nosotros')[1];
+  const aboutUsData = menuOptions.find(opt => opt[0] === 'Sobre Nosotros')[1];
   const confirmMessage = aboutUsData.join('\n');
   const showAboutUs = `${title} 📝 \n
   ${confirmMessage}\n
@@ -425,7 +425,6 @@ function setAboutUs(title) {
  */
 function setCatalog() {
   console.log('Funcion SetCatalog()');
-  let getUserOption;
 
   repeatDoWhile(() => {
     let getUserOption = prompt(showMenu(menuOptions[2][0], menuOptions[2][1]));
