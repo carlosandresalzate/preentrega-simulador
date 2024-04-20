@@ -306,13 +306,13 @@ function mergeAndSortArray(...arrays) {
    * @brief Almacena el resultado final en la variable global artists.
    * @type {Array}
    */
-  artists = uniqueArray.sort();
+  return uniqueArray.sort();
 }
 
 /**
  * Llamada a la funcion que combina y organiza los generos
  */
-mergeAndSortArray(
+artists = mergeAndSortArray(
   rock,
   pop,
   indie,
@@ -358,7 +358,7 @@ function repeatDoWhile(func) {
   let repeat = true;
   do {
     func();
-    let userInput = promp('¿Desea Continuar? (s/n)');
+    let userInput = prompt('¿Desea Continuar? (s/n)');
     repeat = userInput.toLowerCase() === 's';
   } while (repeat);
 }
@@ -430,8 +430,10 @@ function setCatalog() {
   repeatDoWhile(() => {
     let getUserOption = prompt(showMenu(menuOptions[2][0], menuOptions[2][1]));
     if (getUserOption === null) {
-      let goToMain = confirm('La Aplicacion ha sido cancelada en el menú de Catálogo, aceptar para ir a Menu Principal, cancelar para salir');
-      if(goToMain) {
+      let goToMain = confirm(
+        'La Aplicacion ha sido cancelada en el menú de Catálogo, aceptar para ir a Menu Principal, cancelar para salir'
+      );
+      if (goToMain) {
         main();
       }
       return;
