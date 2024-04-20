@@ -224,6 +224,7 @@ $RECYCLE.BIN/
 # Optional files
 package-lock.json
 script-dist.js
+.vscode/
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,visualstudiocode,c++,node
 
