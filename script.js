@@ -357,9 +357,13 @@ random();
 function repeatDoWhile(func) {
   let repeat = true;
   do {
+
     func();
-    let userInput = prompt('¿Desea Continuar? (s/n)');
+    // console.log('esta es func: ', func());
+    let userInput = promp('¿Desea Continuar? (s/n)');
+    // console.log('este es userInput: ', userInput);
     repeat = userInput.toLowerCase() === 's';
+    // console.log('esta es repeat = true: ', repeat);
   } while (repeat);
 }
 
@@ -375,9 +379,7 @@ function showMenu(title, array) {
   let menu = `
   ${greeting}\n
   Menu ${title}🎶             🛒(${
-    cartShoppingArray.length > 0
-      ? cartShoppingArray.length
-      : 'vacio'
+    cartShoppingArray.length > 0 ? cartShoppingArray.length : 'vacio'
   })\n`;
   menu += '--------------------------\n';
   array.forEach((array, i) => {
@@ -402,7 +404,7 @@ function showMenu(title, array) {
  */
 function setAboutUs(title) {
   console.log('SetAboutUs');
-  const aboutUsData = menuOptions.find(opt => opt[0] === 'Sobre Nosotros')[1];
+  const aboutUsData = menuOptions.find((opt) => opt[0] === 'Sobre Nosotros')[1];
   const confirmMessage = aboutUsData.join('\n');
   const showAboutUs = `${title} 📝 \n
   ${confirmMessage}\n
@@ -437,7 +439,7 @@ function setCatalog() {
       }
       return;
     }
-
+    console.log('termina el if()');
     let selectedOption = parseInt(getUserOption);
 
     if (
@@ -724,7 +726,7 @@ function main() {
     if (getUserOption === null) {
       console.log('Usuario cancelo la Aplicacion');
       alert('La Aplicacion ha sido cancelada en: Main()');
-      return;
+      return null;
     }
     let selectedOption = parseInt(getUserOption);
 
