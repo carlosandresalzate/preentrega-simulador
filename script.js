@@ -354,17 +354,12 @@ random();
  * @param {Function} func - La funcion que se ejecutara en cada iteracion del ciclo
  * @return {void}
  */
-function repeatDoWhile(func) {
-  let repeat = true;
-  do {
-
+function repeatWhile(func) {
+  console.log('Funcion repeatWhile()');
+  while (func() !== undefined) {
     func();
-    // console.log('esta es func: ', func());
-    let userInput = promp('¿Desea Continuar? (s/n)');
-    // console.log('este es userInput: ', userInput);
-    repeat = userInput.toLowerCase() === 's';
-    // console.log('esta es repeat = true: ', repeat);
-  } while (repeat);
+  }
+  return;
 }
 
 /**
@@ -391,7 +386,11 @@ function showMenu(title, array) {
         ? ''
         : 'Para ver el carrito ingrese: 0'
     }\n  
-    Ingrese el numero de la opcion que desea ver. ↴
+    ${
+      title === 'Carrito de Compra'
+        ? 'Ingrese la opcion que desea ELIMINAR. ↴'
+        : 'Ingrese el numero de la opcion que desea ver. ↴'
+    }
     `;
 
   return menu;
@@ -428,7 +427,7 @@ function setAboutUs(title) {
 function setCatalog() {
   console.log('Funcion SetCatalog()');
 
-  repeatDoWhile(() => {
+  repeatWhile(() => {
     let getUserOption = prompt(showMenu(menuOptions[2][0], menuOptions[2][1]));
     if (getUserOption === null) {
       let goToMain = confirm(
@@ -439,7 +438,7 @@ function setCatalog() {
       }
       return;
     }
-    console.log('termina el if()');
+
     let selectedOption = parseInt(getUserOption);
 
     if (
@@ -452,8 +451,6 @@ function setCatalog() {
         setArtist();
       } else if (submenuTitle === 'Top 10') {
         setTopTen();
-      } else if (submenuTitle === 'Atras') {
-        main();
       }
     } else if (selectedOption === 0) {
       showCart();
@@ -471,7 +468,7 @@ function setCatalog() {
  */
 function setArtist() {
   console.log('Funcion setArtists()');
-  repeatDoWhile(() => {
+  repeatWhile(() => {
     let getUserOption = prompt(showMenu(menuOptions[2][1][0], artists));
     if (getUserOption === null) {
       console.log('El usuario cancela la seleccion de artistas');
@@ -533,7 +530,7 @@ function setArtist() {
 function setTopTen() {
   console.log('Funcion setTopTen()');
 
-  repeatDoWhile(() => {
+  repeatWhile(() => {
     let getUserOption = prompt(showMenu(menuOptions[2][1][1], topTenArray));
     if (getUserOption === null) {
       console.log('Usuario Cancelo la seleccion de Top 10');
@@ -591,7 +588,7 @@ function setTopTen() {
  */
 function setOtherProducts() {
   console.log('Funcion setOtherProducts()');
-  repeatDoWhile(() => {
+  repeatWhile(() => {
     let getUserOption = prompt(showMenu(menuOptions[3][0], menuOptions[3][1]));
     if (getUserOption === null) {
       let goToMain = confirm(
@@ -666,7 +663,7 @@ function setSupport() {
  */
 function showCart() {
   console.log('Funcion showCart()');
-  repeatDoWhile(() => {
+  repeatWhile(() => {
     let getUserOption = prompt(
       showMenu('Carrito de Compra', cartShoppingArray)
     );
@@ -690,7 +687,7 @@ function showCart() {
         if (removeItem !== -1) {
           cartShoppingArray.splice(removeItem, 1);
           let goToCart = confirm(
-            'Elimino el producto del carrito, desea ir al carrito? Si no, se le dirigira a Catalogo'
+            `Elimino el producto ${selectedArtist} del carrito, desea ir al carrito? Si no, se le dirigira a Catalogo`
           );
           if (goToCart) {
             showCart();
@@ -709,7 +706,7 @@ function showCart() {
     }
   });
 
-  main();
+  return;
 }
 
 // #region Funcion Main
@@ -721,12 +718,12 @@ function showCart() {
 function main() {
   console.log('Funcion Main()');
 
-  repeatDoWhile(() => {
+  repeatWhile(() => {
     let getUserOption = prompt(showMenu(menuOptions[0][0], menuOptions[0][1]));
     if (getUserOption === null) {
       console.log('Usuario cancelo la Aplicacion');
       alert('La Aplicacion ha sido cancelada en: Main()');
-      return null;
+      return;
     }
     let selectedOption = parseInt(getUserOption);
 
@@ -752,5 +749,6 @@ function main() {
       main();
     }
   });
+  return;
 }
 main();
